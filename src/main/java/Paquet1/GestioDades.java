@@ -1,9 +1,15 @@
 package Paquet1;
 
+import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.PropertyException;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -93,6 +99,55 @@ public class GestioDades {
     }
 
 
+
+
+
+
+
+
+
+
+    //PASSAR LES DADES DEL "XML" A UN ARRAYLIST
+    public static ArrayList<Alumne> xmlEnArraylist(String nomFitxer) {
+        ArrayList<Alumne> llistaAlumnes = new ArrayList<>();
+        try {
+            InputStream is = GestioDades.class.getClassLoader().getResourceAsStream(nomFitxer);
+            if (is == null){
+                System.out.println("No s'ha trobat el fitxer: " + nomFitxer);
+                System.out.println("Tornant llista buida...");
+                return llistaAlumnes;
+            }
+            JAXBContext context = JAXBContext.newInstance(Alumne.class, ArrayList.class);
+            Marshaller m = context.createMarshaller();
+            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            m.marshal(Alumne, new File("alumnes.xml"));
+
+            llistaAlumnes.add(Alumne);
+
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
+        return llistaAlumnes;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //PASSAR LES DADES DEL "JSON" A UN ARRAYLIST
     public static ArrayList<Alumne> jsonEnArraylist(String nomFitxer){
 
@@ -105,6 +160,8 @@ public class GestioDades {
                 System.out.println("Tornant llista buida...");
                 return llista;
             }
+            // PARTE VÁLIDA PARA AMBAS LIBRERIAS, ORG I GSON
+
             //Contingut en text pla de tot l'arxiu JSON
             String contingut = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             //Objecte JSON que conté tot l'objecte productes senser
@@ -132,7 +189,6 @@ public class GestioDades {
      ###### LECTURA DE FITXERS ######
     ###############################
     */
-
 
    // LLEGIR DES DE DAT
    public static void llegirDat(String nomFitxer) {

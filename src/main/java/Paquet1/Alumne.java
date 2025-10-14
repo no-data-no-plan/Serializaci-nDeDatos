@@ -1,15 +1,29 @@
 package Paquet1;
 
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+
+@XmlRootElement(name = "alumne")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Alumne implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @XmlElement
     private String nom;
+
+    @XmlElement
     private String cognom;
+
+    @XmlElement
     private int edat;
+
+    @XmlElement
     private double nota;
 
-    //Constructor
+    // Constructor vacío (obligatorio para JAXB y Gson)
+    public Alumne() {}
+
+    // Constructor completo
     public Alumne(String nom, String cognom, int edat, double nota) {
         this.nom = nom;
         this.cognom = cognom;
@@ -17,38 +31,38 @@ public class Alumne implements Serializable {
         this.nota = nota;
     }
 
-    // Getter i setters
-    public String getNom(){
+    // Getters y Setters
+    public String getNom() {
         return nom;
     }
-    public void setNom(String nom){
+    public void setNom(String nom) {
         this.nom = nom;
     }
 
-    public String getCognom(){
+    public String getCognom() {
         return cognom;
     }
-    public void setCognom(String cognom){
+    public void setCognom(String cognom) {
         this.cognom = cognom;
     }
-    public int getEdat(){
+
+    public int getEdat() {
         return edat;
     }
-    public void setEdat(int edat){
+    public void setEdat(int edat) {
         this.edat = edat;
     }
-    public Double getNota(){
+
+    public double getNota() {
         return nota;
     }
-    public void setNota(double nota){
+    public void setNota(double nota) {
         this.nota = nota;
     }
 
-    //Vista impressió de l'objecte
     @Override
-    public String toString(){
-        return "Alumne:\n\tNom: "+ nom + "\n\tCognom: "+ cognom +
-                "\n\tEdat: "+ edat +"\n\tNota: "+ nota;
-
+    public String toString() {
+        return "Alumne:\n\tNom: " + nom + "\n\tCognom: " + cognom +
+                "\n\tEdat: " + edat + "\n\tNota: " + nota;
     }
 }

@@ -12,9 +12,11 @@ public class Main {
     public static Scanner scan = new Scanner(System.in);
 
     // FILES
-    private static final String DADES_JSON = "dadesJson.json";
+    private static final String DADES_JSON = "alumnes.json";
     private static final String FITXER_DAT = "alumnes.dat";
     private static final String FITXER_CSV = "alumnes.csv";
+    private static final String FITXER_XML = "alumnes.xml";
+
 
     public static void main(String[] args){
 
@@ -41,7 +43,7 @@ public class Main {
                     GestioDades.llegirCsv(FITXER_CSV);
                     break;
                 case 3:
-                    System.out.println("No está encara fet!");
+                    GestioDades.llegirXml(FITXER_XML);
                     break;
                 case 4:
                     GestioDades.llegirJson(DADES_JSON);
