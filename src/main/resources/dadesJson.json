@@ -1,0 +1,40 @@
+{
+  "alumnes": [
+    {
+      "nom": "Alba",
+      "cognom": "Torrens",
+      "edat": 27,
+      "nota": 7.89
+    },
+    {
+      "nom": "Tomás",
+      "cognom": "Turbado",
+      "edat": 42,
+      "nota": 6.12
+    },
+    {
+      "nom": "Maria del Mar",
+      "cognom": "Serra",
+      "edat": 32,
+      "nota": 9.25
+    },
+    {
+      "nom": "Ana",
+      "cognom": "Cladera",
+      "edat": 23,
+      "nota": 2
+    },
+    {
+      "nom": "Jake",
+      "cognom": "Peralta",
+      "edat": 29,
+      "nota": 7.10
+    },
+    {
+      "nom": "Josep",
+      "cognom": "Farruko",
+      "edat": 24,
+      "nota": 5.50
+    }
+  ]
+}
