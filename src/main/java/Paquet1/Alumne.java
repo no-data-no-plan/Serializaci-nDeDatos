@@ -1,7 +1,7 @@
 package Paquet1;
 
 import java.io.Serializable;
-public class AlumneJson implements Serializable {
+public class Alumne implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String nom;
@@ -10,7 +10,7 @@ public class AlumneJson implements Serializable {
     private double nota;
 
     //Constructor
-    public AlumneJson(String nom, String cognom, int edat, double nota) {
+    public Alumne(String nom, String cognom, int edat, double nota) {
         this.nom = nom;
         this.cognom = cognom;
         this.edat = edat;

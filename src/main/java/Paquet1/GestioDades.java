@@ -21,8 +21,8 @@ public class GestioDades {
     */
 
     //PASSAR LES DADES DEL "DAT" A UN ARRAYLIST
-    public static ArrayList<AlumneDat> datEnArraylist(String nomFitxer) {
-        ArrayList<AlumneDat> llistaAlumnes = new ArrayList<>();
+    public static ArrayList<Alumne> datEnArraylist(String nomFitxer) {
+        ArrayList<Alumne> llistaAlumnes = new ArrayList<>();
 
         try {
             InputStream is = GestioDades.class.getClassLoader().getResourceAsStream(nomFitxer);
@@ -34,7 +34,7 @@ public class GestioDades {
             ObjectInputStream ois = new ObjectInputStream(is);
             try {
                 while (true) {
-                    AlumneDat a = (AlumneDat) ois.readObject();
+                    Alumne a = (Alumne) ois.readObject();
                     llistaAlumnes.add(a);
                 }
             } catch (EOFException eof) {
@@ -48,8 +48,8 @@ public class GestioDades {
     }
 
     //PASSAR LES DADES DEL "CSV" A UN ARRAYLIST
-    public static ArrayList<AlumneCsv> csvEnArraylist(String nomFitxer) {
-        ArrayList<AlumneCsv> llistaAlumnes = new ArrayList<>();
+    public static ArrayList<Alumne> csvEnArraylist(String nomFitxer) {
+        ArrayList<Alumne> llistaAlumnes = new ArrayList<>();
 
         try {
             InputStream is = GestioDades.class.getClassLoader().getResourceAsStream(nomFitxer);
@@ -76,7 +76,7 @@ public class GestioDades {
                         String cognom = parts[1].trim();
                         int edat = Integer.parseInt(parts[2].trim());
                         double nota = Double.parseDouble(parts[3].trim());
-                        llistaAlumnes.add(new AlumneCsv(nom, cognom, edat, nota));
+                        llistaAlumnes.add(new Alumne(nom, cognom, edat, nota));
                     } catch (NumberFormatException e) {
                         System.err.println("Error parsejant la línia: " + linia);
                     }
@@ -94,9 +94,9 @@ public class GestioDades {
 
 
     //PASSAR LES DADES DEL "JSON" A UN ARRAYLIST
-    public static ArrayList<AlumneJson> jsonEnArraylist(String nomFitxer){
+    public static ArrayList<Alumne> jsonEnArraylist(String nomFitxer){
 
-        ArrayList<AlumneJson> llista = new ArrayList<>();
+        ArrayList<Alumne> llista = new ArrayList<>();
 
         try{
             InputStream is = GestioDades.class.getClassLoader().getResourceAsStream(nomFitxer);
@@ -120,7 +120,7 @@ public class GestioDades {
                 int edat = objecte.getInt("edat");
                 Double nota = objecte.getDouble("nota");
 
-                llista.add(new AlumneJson(nom, cognom, edat, nota));
+                llista.add(new Alumne(nom, cognom, edat, nota));
             }
         }catch(IOException e){
             e.printStackTrace();
@@ -137,26 +137,26 @@ public class GestioDades {
    // LLEGIR DES DE DAT
    public static void llegirDat(String nomFitxer) {
        System.out.println("\n--- LLISTA D'ALUMNES (DAT) ---");
-       ArrayList<AlumneDat> llistaAlumnes = datEnArraylist(nomFitxer);
-       for(AlumneDat a : llistaAlumnes){
+       ArrayList<Alumne> llistaAlumnes = datEnArraylist(nomFitxer);
+       for(Alumne a : llistaAlumnes){
            System.out.println(a);
        }
    }
     // LLEGIR DES DE CSV
     public static void llegirCsv(String nomFitxer) {
         System.out.println("\n--- LLISTA D'ALUMNES (CSV) ---");
-        ArrayList<AlumneCsv> llistaAlumnes = csvEnArraylist(nomFitxer);
-        for(AlumneCsv a : llistaAlumnes){
+        ArrayList<Alumne> llistaAlumnes = csvEnArraylist(nomFitxer);
+        for(Alumne a : llistaAlumnes){
             System.out.println(a);
         }
     }
     // LLEGIR DES DE JSON
     public static void llegirJson(String nomFitxer) {
         try {
+            System.out.println("\n--- LLISTA D'ALUMNES (JSON) ---");
+            List<Alumne> llistaProductes = jsonEnArraylist(nomFitxer);
 
-            List<AlumneJson> llistaProductes = jsonEnArraylist(nomFitxer);
-
-            for (AlumneJson p : llistaProductes) {
+            for (Alumne p : llistaProductes) {
                 System.out.println(p);
             }
 
@@ -175,22 +175,22 @@ public class GestioDades {
         System.out.println("4. Nota");
 
         try{
-            List<AlumneJson> llista = jsonEnArraylist(nomFitxer);
+            List<Alumne> llista = jsonEnArraylist(nomFitxer);
             int opcio = Integer.parseInt(scan.nextLine());
 
             //Ordenem la llista de productes al switch depenent del que vulgui l'usuari
             switch (opcio){
                 case 1:
-                    llista.sort(Comparator.comparing(AlumneJson::getNom));
+                    llista.sort(Comparator.comparing(Alumne::getNom));
                     break;
                 case 2:
-                    llista.sort(Comparator.comparing(AlumneJson::getCognom));
+                    llista.sort(Comparator.comparing(Alumne::getCognom));
                     break;
                 case 3:
-                    llista.sort(Comparator.comparingInt(AlumneJson::getEdat).reversed());
+                    llista.sort(Comparator.comparingInt(Alumne::getEdat).reversed());
                     break;
                 case 4:
-                    llista.sort(Comparator.comparingDouble(AlumneJson::getNota).reversed());
+                    llista.sort(Comparator.comparingDouble(Alumne::getNota).reversed());
                     break;
                 default:
                     System.out.print("Opció errònia..\n");
@@ -199,7 +199,7 @@ public class GestioDades {
             if (opcio < 1 || opcio > 4){
                 System.out.println("Sortint");
             }else{
-                for (AlumneJson p : llista) {
+                for (Alumne p : llista) {
                     System.out.println(p);
                 }
             }
