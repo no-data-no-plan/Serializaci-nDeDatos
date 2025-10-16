@@ -23,11 +23,14 @@ public class Main {
         int opcio;
         do {
             System.out.println("\n--- GESTOR D'ALUMNES (SERIALITZACIÓ AMB JSON I XML) ---");
+            System.out.println("LECTURA");
             System.out.println("1. Llegir l'arxiu DAT");
             System.out.println("2. Llegir l'arxiu CSV");
             System.out.println("3. Llegir l'arxiu XML");
             System.out.println("4. Llegir l'arxiu JSON");
             System.out.println("5. Llegir el json ordenat per categoría");
+            System.out.println("CONVERSIÓ");
+            System.out.println("6. Exportar alumnes a XML");
 
 
             System.out.println("0. Sortir");
@@ -51,7 +54,8 @@ public class Main {
                 case 5:
                     GestioDades.llegirOrdenat(DADES_JSON);
                     break;
-
+                case 6:
+                    GestioDades.exportarAlumnes(FITXER_DAT, DADES_JSON, FITXER_CSV, FITXER_XML;
 
 
                 case 0:

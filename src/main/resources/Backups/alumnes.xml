@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alumnes>
+    <alumne>
+        <nom>María</nom>
+        <cognom>Torres</cognom>
+        <edat>19</edat>
+        <nota>3.65</nota>
+    </alumne>
+    <alumne>
+        <nom>Aitor</nom>
+        <cognom>Menta</cognom>
+        <edat>22</edat>
+        <nota>9.02</nota>
+    </alumne>
+    <alumne>
+        <nom>Ruben</nom>
+        <cognom>Corral</cognom>
+        <edat>27</edat>
+        <nota>3.00</nota>
+    </alumne>
+    <alumne>
+        <nom>Atreyu</nom>
+        <cognom>Yusuke</cognom>
+        <edat>17</edat>
+        <nota>10</nota>
+    </alumne>
+    <alumne>
+        <nom>Sara</nom>
+        <cognom>Jerez</cognom>
+        <edat>4.75</edat>
+        <nota>20</nota>
+    </alumne>
+    <alumne>
+        <nom>Sheila</nom>
+        <cognom>Spring</cognom>
+        <edat>8.80</edat>
+        <nota>24</nota>
+    </alumne>
+</alumnes>

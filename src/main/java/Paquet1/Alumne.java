@@ -10,20 +10,17 @@ public class Alumne implements Serializable {
 
     @XmlElement
     private String nom;
-
     @XmlElement
     private String cognom;
-
     @XmlElement
     private int edat;
-
     @XmlElement
     private double nota;
 
     // Constructor vacío (obligatorio para JAXB y Gson)
     public Alumne() {}
 
-    // Constructor completo
+    // Constructor completo para .dat y csv
     public Alumne(String nom, String cognom, int edat, double nota) {
         this.nom = nom;
         this.cognom = cognom;
@@ -60,6 +57,7 @@ public class Alumne implements Serializable {
         this.nota = nota;
     }
 
+    // ToString para imprimir los datos con formato deseado
     @Override
     public String toString() {
         return "Alumne:\n\tNom: " + nom + "\n\tCognom: " + cognom +

@@ -3,7 +3,7 @@ package Paquet1;
 import java.util.List;
 
 public class DadesJson {
-    private List<Alumne> alumnes;  // ← Usa la clase Alumne
+    private List<Alumne> alumnes;
 
     public DadesJson() {}
 

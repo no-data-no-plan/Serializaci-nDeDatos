@@ -9,7 +9,7 @@ import java.util.List;
 public class DadesXml {
 
     @XmlElement(name = "alumne")
-    private List<Alumne> alumnes = new ArrayList<>();  // ← Usa la clase Alumne
+    private List<Alumne> alumnes = new ArrayList<>();
 
     public DadesXml() {}
 

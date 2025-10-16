@@ -1,15 +1,12 @@
 package Paquet1;
 
-import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.PropertyException;
+import javax.xml.bind.*;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -19,6 +16,7 @@ import java.util.List;
 import static Paquet1.Main.*;
 
 public class GestioDades {
+
 
         /*
       #################################
@@ -36,17 +34,15 @@ public class GestioDades {
                 System.out.println("No s'ha trobat el fitxer DAT: " + nomFitxer);
                 return llistaAlumnes;
             }
-
             ObjectInputStream ois = new ObjectInputStream(is);
             try {
                 while (true) {
                     Alumne a = (Alumne) ois.readObject();
                     llistaAlumnes.add(a);
                 }
-            } catch (EOFException eof) {
-
-            }
+            } catch (EOFException eof) {}
             ois.close();
+
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Error llegint el fitxer DAT: " + e.getMessage());
         }
@@ -98,15 +94,6 @@ public class GestioDades {
         return llistaAlumnes;
     }
 
-
-
-
-
-
-
-
-
-
     //PASSAR LES DADES DEL "XML" A UN ARRAYLIST
     public static ArrayList<Alumne> xmlEnArraylist(String nomFitxer) {
         ArrayList<Alumne> llistaAlumnes = new ArrayList<>();
@@ -117,36 +104,27 @@ public class GestioDades {
                 System.out.println("Tornant llista buida...");
                 return llistaAlumnes;
             }
-            JAXBContext context = JAXBContext.newInstance(Alumne.class, ArrayList.class);
-            Marshaller m = context.createMarshaller();
-            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            m.marshal(Alumne, new File("alumnes.xml"));
 
-            llistaAlumnes.add(Alumne);
+            //Es passa l'estructura de con es tracten les dades a DadesXml al 'context'
+            JAXBContext context = JAXBContext.newInstance(DadesXml.class);
+
+            //Es crea un Unmarshaller per llegir dades, marshaller és per escriure
+            //També li si passa el context per saber com están organitzades les dades
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+
+            //Es crea un objecte dadesXml que conté tots els objectes dins l'arrel del xml
+            DadesXml dadesXml = (DadesXml) unmarshaller.unmarshal(is);
+
+            //Obtener la lista de alumnos del objeto y añadirlos al arraylist.
+            for (Alumne a : dadesXml.getAlumnes()) {
+                llistaAlumnes.add(a);
+            }
 
         } catch (JAXBException e) {
-            throw new RuntimeException(e);
+            System.err.println("Error llegint el fitxer XML: " + e.getMessage());
         }
         return llistaAlumnes;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     //PASSAR LES DADES DEL "JSON" A UN ARRAYLIST
     public static ArrayList<Alumne> jsonEnArraylist(String nomFitxer){
@@ -184,6 +162,8 @@ public class GestioDades {
         }
         return llista;
     }
+
+
        /*
       #################################
      ###### LECTURA DE FITXERS ######
@@ -206,18 +186,19 @@ public class GestioDades {
             System.out.println(a);
         }
     }
+    public static void llegirXml(String nomFitxer) {
+        System.out.println("\n--- LLISTA D'ALUMNES (XML) ---");
+        List<Alumne> llistaProductes = xmlEnArraylist(nomFitxer);
+        for (Alumne p : llistaProductes) {
+            System.out.println(p);
+        }
+    }
     // LLEGIR DES DE JSON
     public static void llegirJson(String nomFitxer) {
-        try {
-            System.out.println("\n--- LLISTA D'ALUMNES (JSON) ---");
-            List<Alumne> llistaProductes = jsonEnArraylist(nomFitxer);
-
-            for (Alumne p : llistaProductes) {
-                System.out.println(p);
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+        System.out.println("\n--- LLISTA D'ALUMNES (JSON) ---");
+        List<Alumne> llistaProductes = jsonEnArraylist(nomFitxer);
+        for (Alumne p : llistaProductes) {
+            System.out.println(p);
         }
     }
 
@@ -263,6 +244,43 @@ public class GestioDades {
             e.printStackTrace();
         }
     }
+       /*
+      ###############################################
+     ###### IMPORTAR FITXERS A FORMAT DIFERENT######
+    ###############################################
+    */
 
 
+    public static void exportarAlumnes(String fitxerDat, String fitxerJson, String fitxerCsv, String fitxerXml) throws JAXBException {
+        System.out.println("Selecciona el format d'origen de les dades:");
+        System.out.println("1. DAT");
+        System.out.println("2. CSV");
+        System.out.println("3. JSON");
+
+        ArrayList<Alumne> llistaImport = null;
+        int opcio = Integer.parseInt(scan.nextLine());
+        if(opcio == 1){
+            llistaImport = datEnArraylist(fitxerDat);
+        }else if(opcio == 2){
+            llistaImport = csvEnArraylist(fitxerCsv);
+        }else if(opcio == 3){
+            llistaImport = jsonEnArraylist(fitxerJson);
+        }
+        try{
+            InputStream is = GestioDades.class.getClassLoader().getResourceAsStream(fitxerXml);
+            JAXBContext context = JAXBContext.newInstance(DadesXml.class);
+
+            //Es crea un Unmarshaller per llegir dades, marshaller és per escriure
+            //També li si passa el context per saber com están organitzades les dades
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            for (Alumne a : llistaImport){
+                marshaller.marshal((Object) a, is);
+            }
+
+        }catch (JAXBException e){
+            System.out.println("Error exportant les dades.");
+        }
+
+    }
 }
