@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import javax.xml.bind.*;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -188,17 +189,17 @@ public class GestioDades {
     }
     public static void llegirXml(String nomFitxer) {
         System.out.println("\n--- LLISTA D'ALUMNES (XML) ---");
-        List<Alumne> llistaProductes = xmlEnArraylist(nomFitxer);
-        for (Alumne p : llistaProductes) {
-            System.out.println(p);
+        List<Alumne> llistaAlumnes = xmlEnArraylist(nomFitxer);
+        for (Alumne a : llistaAlumnes) {
+            System.out.println(a);
         }
     }
     // LLEGIR DES DE JSON
     public static void llegirJson(String nomFitxer) {
         System.out.println("\n--- LLISTA D'ALUMNES (JSON) ---");
-        List<Alumne> llistaProductes = jsonEnArraylist(nomFitxer);
-        for (Alumne p : llistaProductes) {
-            System.out.println(p);
+        List<Alumne> llistaAlumnes = jsonEnArraylist(nomFitxer);
+        for (Alumne a : llistaAlumnes) {
+            System.out.println(a);
         }
     }
 
@@ -250,8 +251,7 @@ public class GestioDades {
     ###############################################
     */
 
-
-    public static void exportarAlumnes(String fitxerDat, String fitxerJson, String fitxerCsv, String fitxerXml) throws JAXBException {
+    public static void exportarAlumnesAXml(String fitxerDat, String fitxerJson, String fitxerCsv, String fitxerXml) throws JAXBException {
         System.out.println("Selecciona el format d'origen de les dades:");
         System.out.println("1. DAT");
         System.out.println("2. CSV");
@@ -259,6 +259,7 @@ public class GestioDades {
 
         ArrayList<Alumne> llistaImport = null;
         int opcio = Integer.parseInt(scan.nextLine());
+
         if(opcio == 1){
             llistaImport = datEnArraylist(fitxerDat);
         }else if(opcio == 2){
@@ -266,21 +267,91 @@ public class GestioDades {
         }else if(opcio == 3){
             llistaImport = jsonEnArraylist(fitxerJson);
         }
+
         try{
-            InputStream is = GestioDades.class.getClassLoader().getResourceAsStream(fitxerXml);
+            //Forma de ubicar la carpeta de resources, algo muy bonito que poseen los proyectos maven
+            URL rutaResourcesMaven = GestioDades.class.getClassLoader().getResource("");
+            String pathResources = rutaResourcesMaven.getPath();
+
+            //Pasamos la ruta del archivo junto con el nombre para que se haga append correctamente
+            //Y no genere un archivo alumnes.xml en la raiz del proyecto al no encontrar el xml original.
+            File xmlFile = new File(pathResources + fitxerXml);
             JAXBContext context = JAXBContext.newInstance(DadesXml.class);
 
-            //Es crea un Unmarshaller per llegir dades, marshaller és per escriure
-            //També li si passa el context per saber com están organitzades les dades
+            //Leer datos existentes si el archivo ya existe
+            DadesXml dadesExistents = new DadesXml();
+            if(xmlFile.exists() && xmlFile.length() > 0){
+                Unmarshaller unmarshaller = context.createUnmarshaller();
+                dadesExistents = (DadesXml) unmarshaller.unmarshal(xmlFile);
+            }
+            dadesExistents.getAlumnes().addAll(llistaImport);
+
+            // Escribir todo al archivo XML
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            for (Alumne a : llistaImport){
-                marshaller.marshal((Object) a, is);
-            }
+            marshaller.marshal(dadesExistents, xmlFile);
+
+            System.out.println("Dades exportades correctament a " + fitxerXml);
 
         }catch (JAXBException e){
-            System.out.println("Error exportant les dades.");
+            System.out.println("Error exportant les dades: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+       /*
+      ###############################################
+     ###### FILTRAR XML PER NOTA ######
+    ###############################################
+    */
+
+
+    public static void filtrarXml(String nomFitxer) throws JAXBException {
+        System.out.println("\n--- LLISTA D'ALUMNES APROBATS (XML) ---");
+        List<Alumne> llistaAlumnes = xmlEnArraylist(nomFitxer);
+
+        //Generamos la ubicación del nuevo archivo
+        URL rutaResourcesMaven = GestioDades.class.getClassLoader().getResource("");
+        String pathResources = rutaResourcesMaven.getPath();
+        File aprovatsXML = new File(pathResources + "aprovats.xml");
+
+        //Filtramos por alumnos aprobados para pasarlos a sua archivo propio
+        List<Alumne> aprovats = new ArrayList<>();
+        for (Alumne a : llistaAlumnes) {
+            if(a.getNota() >= 5) {
+                aprovats.add(a);
+            }
         }
 
+        DadesXml dadesAprovats = new DadesXml();
+        dadesAprovats.setAlumnes(aprovats);
+
+        //Damos contexto al lector  escritor
+        JAXBContext context = JAXBContext.newInstance(DadesXml.class);
+
+        //Probamos de escribir un nuevo archivo aprobados XML
+        try{
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(dadesAprovats, aprovatsXML);
+        }catch(JAXBException e){
+            System.out.println("Error escrivint nou arxiu aprovats: " + e.getMessage());
+        }
+        if(aprovatsXML.exists()){
+            //Probamos de leer el archivo recien creado.
+            try {
+                DadesXml alumnesAprovats = new DadesXml();
+                if (aprovatsXML.exists() && aprovatsXML.length() > 0) {
+                    Unmarshaller unmarshaller = context.createUnmarshaller();
+                    alumnesAprovats = (DadesXml) unmarshaller.unmarshal(aprovatsXML);
+                }
+                for (Alumne a : alumnesAprovats.getAlumnes()) {
+                    System.out.println(a);
+                }
+            }catch(JAXBException e){
+                System.out.println("Error llegint nou arxiu alumnes: " + e.getMessage());
+            }
+        }else{
+            System.out.println("l'arxiu no existeix!");
+        }
     }
 }

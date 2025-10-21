@@ -1,5 +1,6 @@
 package Paquet1;
 
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,7 +19,7 @@ public class Main {
     private static final String FITXER_XML = "alumnes.xml";
 
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws JAXBException {
 
         int opcio;
         do {
@@ -29,11 +30,12 @@ public class Main {
             System.out.println("3. Llegir l'arxiu XML");
             System.out.println("4. Llegir l'arxiu JSON");
             System.out.println("5. Llegir el json ordenat per categoría");
-            System.out.println("CONVERSIÓ");
+            System.out.println("\nVARIS XML");
             System.out.println("6. Exportar alumnes a XML");
+            System.out.println("7. Filtrar aprovats a neu fitxer XML");
 
 
-            System.out.println("0. Sortir");
+            System.out.println("\n0. Sortir");
             System.out.print("Opció: ");
 
             opcio = Integer.parseInt(scan.nextLine());
@@ -55,8 +57,9 @@ public class Main {
                     GestioDades.llegirOrdenat(DADES_JSON);
                     break;
                 case 6:
-                    GestioDades.exportarAlumnes(FITXER_DAT, DADES_JSON, FITXER_CSV, FITXER_XML;
-
+                    GestioDades.exportarAlumnesAXml(FITXER_DAT, DADES_JSON, FITXER_CSV, FITXER_XML);
+                case 7:
+                    GestioDades.filtrarXml(FITXER_XML);
 
                 case 0:
                     System.out.println("Fins que ens ensume'm de nou!");
